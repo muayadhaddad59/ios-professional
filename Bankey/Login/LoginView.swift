@@ -9,9 +9,12 @@ import Foundation
 import UIKit
 
 class LoginView: UIView {
+    
     let stackView = UIStackView()
     let usernameTextField = UITextField()
     let passwordTextField = UITextField()
+    let dividerView = UIView()
+    
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -30,7 +33,9 @@ class LoginView: UIView {
 extension LoginView {
     func style() {
         translatesAutoresizingMaskIntoConstraints = false
-        backgroundColor = .orange
+        backgroundColor = .secondarySystemBackground
+        layer.cornerRadius = 5
+        clipsToBounds = true
         
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
@@ -44,10 +49,15 @@ extension LoginView {
         passwordTextField.placeholder = "Password"
         passwordTextField.isSecureTextEntry = true
         passwordTextField.delegate = self
+        
+        dividerView.translatesAutoresizingMaskIntoConstraints = false
+        dividerView.backgroundColor = .secondarySystemFill
+        
     }
 
     func layout() {
         stackView.addArrangedSubview(usernameTextField)
+        stackView.addArrangedSubview(dividerView)
         stackView.addArrangedSubview(passwordTextField)
         addSubview(stackView)
 
@@ -58,6 +68,7 @@ extension LoginView {
             trailingAnchor.constraint(equalToSystemSpacingAfter: stackView.trailingAnchor, multiplier: 1),
             bottomAnchor.constraint(equalToSystemSpacingBelow: stackView.bottomAnchor, multiplier: 1)
         ])
+        dividerView.heightAnchor.constraint(equalToConstant: 1).isActive = true
     }
 }
 //MARK: - UITextFieldDelegate
@@ -69,11 +80,7 @@ extension LoginView: UITextFieldDelegate {
         return true
     }
     func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
-        if textField.text != "" {
-            return true
-        } else {
-            return false
-        }
+       return true 
     }
     func textFieldDidEndEditing(_ textField: UITextField) {
         
