@@ -5,7 +5,7 @@
 //  Created by Muayad Haddad on 30/09/2022.
 //
 import UIKit
-
+//MARK: - Don't forget to implement extension of ViewController
 class MainViewController: UITabBarController {
 
     override func viewDidLoad() {
@@ -48,11 +48,6 @@ class MainViewController: UITabBarController {
     }
 }
 
-class AccountSummaryViewController: UIViewController {
-    override func viewDidLoad() {
-        view.backgroundColor = .systemGreen
-    }
-}
 
 class MoveMoneyViewController: UIViewController {
     override func viewDidLoad() {

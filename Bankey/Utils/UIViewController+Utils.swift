@@ -7,7 +7,7 @@
 import UIKit
 
 extension UIViewController {
-
+    
     // New
     func setStatusBar() {
         let navBarAppearance = UINavigationBarAppearance()
@@ -16,7 +16,6 @@ extension UIViewController {
         UINavigationBar.appearance().standardAppearance = navBarAppearance
         UINavigationBar.appearance().scrollEdgeAppearance = navBarAppearance
     }
-
     
     func setTabBarImage(imageName: String, title: String) {
         let configuration = UIImage.SymbolConfiguration(scale: .large)
