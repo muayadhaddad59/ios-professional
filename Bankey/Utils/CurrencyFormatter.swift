@@ -75,8 +75,3 @@ struct CurrencyFormatter {
         return rootString
     }
 }
-extension Decimal {
-    var doubleValue: Double {
-        return NSDecimalNumber(decimal:self).doubleValue
-    }
-}
