@@ -20,12 +20,13 @@ class AccountSummaryCell: UITableViewCell {
     //end
     
     static let resuseID = String(describing: AccountSummaryCell.self)
-    static let rowHeight: CGFloat = 100
+    static let rowHeight: CGFloat = 112
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setup()
         layout()
+        
     }
     
     required init?(coder: NSCoder) {
@@ -65,7 +66,8 @@ extension AccountSummaryCell {
         //Balance Amount LAbel
         balanceAmountLabel.translatesAutoresizingMaskIntoConstraints = false
         balanceAmountLabel.textAlignment = .right
-        balanceAmountLabel.text = "$929,466.63"
+        balanceAmountLabel.attributedText = makeFormattedBalance(dollars: "929,466", cents: "23")
+
         
         // Add left Arrow cheveron
         chevronImageView.translatesAutoresizingMaskIntoConstraints = false
