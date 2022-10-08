@@ -11,7 +11,7 @@ protocol LogoutDelegate: AnyObject {
     func didLogout()
 }
 
-protocol LoginViewControllerDelegate:AnyObject {
+protocol LoginViewControllerDelegate: AnyObject {
     func didLogin() //: Pass Data
 }
 
@@ -23,7 +23,7 @@ class LoginViewController: UIViewController {
     let titleLabel = UILabel()
     let descLabel = UILabel()
     weak var delegate: LoginViewControllerDelegate?
-    
+
     //    Textfield Text
     var username: String? {
         return loginView.usernameTextField.text
@@ -31,7 +31,12 @@ class LoginViewController: UIViewController {
     var password: String? {
         return loginView.passwordTextField.text
     }
+    // Animation
+    var leadingEdgeOnScreen: CGFloat = 16
+    var leadingEdgeOffScreen: CGFloat = -1000
 
+    var titleLeadingAnchor: NSLayoutConstraint?
+    var decsLeadingAnchor: NSLayoutConstraint?
     override func viewDidLoad() {
         super.viewDidLoad()
         style()
@@ -39,8 +44,14 @@ class LoginViewController: UIViewController {
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        signInButton.configuration?.showsActivityIndicator = false
+        animate()
     }
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        signInButton.configuration?.showsActivityIndicator = false
+
+    }
+
 }
 
 
@@ -61,17 +72,19 @@ extension LoginViewController {
         errorMessageLabel.textColor = .systemRed
         errorMessageLabel.numberOfLines = 0
         errorMessageLabel.isHidden = true
-        
+
         // title label
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.text = "Bankey"
+        titleLabel.alpha = 0
         titleLabel.textAlignment = .center
         titleLabel.font = UIFont.boldSystemFont(ofSize: 30)
-        
+
         // description Label
         descLabel.translatesAutoresizingMaskIntoConstraints = false
         descLabel.text = "Your premium source for all things banking !"
         descLabel.textAlignment = .center
+        descLabel.alpha = 0
         descLabel.numberOfLines = 0
     }
 
@@ -100,20 +113,23 @@ extension LoginViewController {
             errorMessageLabel.leadingAnchor.constraint(equalTo: signInButton.leadingAnchor),
             errorMessageLabel.trailingAnchor.constraint(equalTo: signInButton.trailingAnchor)
             ])
-        
+
         // description label
         NSLayoutConstraint.activate([
             loginView.topAnchor.constraint(equalToSystemSpacingBelow: descLabel.bottomAnchor, multiplier: 4),
-            descLabel.leadingAnchor.constraint(equalTo: loginView.leadingAnchor),
             view.trailingAnchor.constraint(equalToSystemSpacingAfter: descLabel.trailingAnchor, multiplier: 1),
             ])
+        decsLeadingAnchor = descLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: leadingEdgeOffScreen)
+        decsLeadingAnchor?.isActive = true
         
-        // Title label
+        // Title
         NSLayoutConstraint.activate([
-            descLabel.topAnchor.constraint(equalToSystemSpacingBelow: titleLabel.bottomAnchor, multiplier: 2),
-            titleLabel.trailingAnchor.constraint(equalTo: descLabel.trailingAnchor ),
-            titleLabel.leadingAnchor.constraint(equalTo: descLabel.leadingAnchor)
-        ])
+            descLabel.topAnchor.constraint(equalToSystemSpacingBelow: titleLabel.bottomAnchor, multiplier: 3),
+            titleLabel.trailingAnchor.constraint(equalTo: loginView.trailingAnchor)
+            ])
+
+        titleLeadingAnchor = titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: leadingEdgeOffScreen)
+        titleLeadingAnchor?.isActive = true
     }
 }
 
@@ -136,7 +152,7 @@ extension LoginViewController {
             // to show indicator
             signInButton.configuration?.showsActivityIndicator = true
             delegate?.didLogin()
-            
+
         } else {
             configureView(withMessage: "Incorrect username / password")
         }
@@ -145,5 +161,37 @@ extension LoginViewController {
     private func configureView(withMessage message: String) {
         errorMessageLabel.isHidden = false
         errorMessageLabel.text = message
+    }
+}
+//MARK: - Animations
+extension LoginViewController {
+    private func animate() {
+        let duration = 0.8
+        //First Animation
+        let animate1 = UIViewPropertyAnimator(duration: duration, curve: .easeInOut) {
+            self.titleLeadingAnchor?.constant = self.leadingEdgeOnScreen
+            self.view.layoutIfNeeded()
+        }
+        animate1.startAnimation()
+        //Second animation
+        let animate2 = UIViewPropertyAnimator(duration: duration, curve: .easeInOut) {
+            self.decsLeadingAnchor?.constant = self.leadingEdgeOnScreen
+            self.view.layoutIfNeeded()
+        }
+        animate2.startAnimation(afterDelay: 1)
+        
+        //Third animation
+        let animate3 = UIViewPropertyAnimator(duration: duration * 2, curve: .easeInOut) {
+            self.titleLabel.alpha = 1
+            self.view.layoutIfNeeded()
+        }
+        animate3.startAnimation(afterDelay: 1)
+        
+        //Forth animation
+        let animate4 = UIViewPropertyAnimator(duration: duration * 2, curve: .easeInOut) {
+            self.descLabel.alpha = 1
+            self.view.layoutIfNeeded()
+        }
+        animate4.startAnimation(afterDelay: 1)
     }
 }
